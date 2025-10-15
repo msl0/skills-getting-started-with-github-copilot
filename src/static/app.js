@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     console.log('Unregistering:', activityName, email); // Debug log
     const url = `/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(email)}`;
-    console.log('Request URL:', url); // Debug log
+    if (window.DEBUG) console.log('Request URL:', url); // Debug log
     
     const response = await fetch(url, {
       method: "DELETE",
