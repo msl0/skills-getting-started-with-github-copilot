@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const deleteBtn = document.createElement("button");
             deleteBtn.className = "delete-participant";
             deleteBtn.title = "Unregister participant";
+            deleteBtn.setAttribute("aria-label", `Unregister participant ${email}`);
             deleteBtn.textContent = "✕";
             deleteBtn.addEventListener("click", () => {
               unregisterParticipant(name, email);
