@@ -159,7 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
       result = await response.json();
     } else {
       const text = await response.text();
-      console.log('Response text:', text);
       result = { detail: text || 'Unknown error' };
     }
 
