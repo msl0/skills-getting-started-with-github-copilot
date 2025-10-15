@@ -140,55 +140,55 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Function to unregister a participant
-  window.unregisterParticipant = async function(activityName, email) {
-  try {
-    console.log('Unregistering:', activityName, email); // Debug log
-    const url = `/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(email)}`;
-    if (window.DEBUG) console.log('Request URL:', url); // Debug log
-    
-    const response = await fetch(url, {
-      method: "DELETE",
-    });
-
-    console.log('Response status:', response.status); // Debug log
-    
-    // Check if response has content before parsing JSON
-    let result;
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      result = await response.json();
-    } else {
-      const text = await response.text();
-      result = { detail: text || 'Unknown error' };
-    }
-
-    const messageDiv = document.getElementById("message");
-
-    if (response.ok) {
-      messageDiv.textContent = result.message || 'Participant unregistered successfully';
-      messageDiv.className = "success";
+    try {
+      console.log('Unregistering:', activityName, email); // Debug log
+      const url = `/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(email)}`;
+      console.log('Request URL:', url); // Debug log
       
-      // Refresh the activities list to show updated participant count
-      await fetchActivities();
-    } else {
-      messageDiv.textContent = result.detail || `Error ${response.status}: ${response.statusText}`;
+      const response = await fetch(url, {
+        method: "DELETE",
+      });
+
+      console.log('Response status:', response.status); // Debug log
+      
+      // Check if response has content before parsing JSON
+      let result;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        console.log('Response text:', text);
+        result = { detail: text || 'Unknown error' };
+      }
+
+      const messageDiv = document.getElementById("message");
+
+      if (response.ok) {
+        messageDiv.textContent = result.message || 'Participant unregistered successfully';
+        messageDiv.className = "success";
+        
+        // Refresh the activities list to show updated participant count
+        await fetchActivities();
+      } else {
+        messageDiv.textContent = result.detail || `Error ${response.status}: ${response.statusText}`;
+        messageDiv.className = "error";
+        console.error('Server error:', result);
+      }
+
+      messageDiv.classList.remove("hidden");
+
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        messageDiv.classList.add("hidden");
+      }, 5000);
+    } catch (error) {
+      const messageDiv = document.getElementById("message");
+      messageDiv.textContent = `Network error: ${error.message}`;
       messageDiv.className = "error";
-      console.error('Server error:', result);
+      messageDiv.classList.remove("hidden");
+      console.error("Error unregistering participant:", error);
     }
-
-    messageDiv.classList.remove("hidden");
-
-    // Hide message after 5 seconds
-    setTimeout(() => {
-      messageDiv.classList.add("hidden");
-    }, 5000);
-  } catch (error) {
-    const messageDiv = document.getElementById("message");
-    messageDiv.textContent = `Network error: ${error.message}`;
-    messageDiv.className = "error";
-    messageDiv.classList.remove("hidden");
-    console.error("Error unregistering participant:", error);
-  }
   };
 
   // Initialize app
